@@ -77,13 +77,13 @@ public class MovieRecommender {
 
   public Map<String,Integer> buildAndSetMap(ArrayList<String> list) {
     Map<String,Integer> map = new HashMap<String,Integer>();
-	    int id = 1;
-		  for(String s:list){
-			  if(!map.containsKey(s)){
-			  map.put(s,id);
-			  id++;
-			  }
-		  }
+    int id = 1;
+    for(String s:list) {
+      if(!map.containsKey(s)) {
+        map.put(s, id);
+        id++;
+      }
+    }
     return map;
   }
 
@@ -118,46 +118,46 @@ public class MovieRecommender {
 
   public List<String> getRecommendationsForUser(String userId) {
     List<String> recs = new ArrayList<String>();
-	  DataModel model = null;
-		UserSimilarity similarity = null;
-		List<RecommendedItem> recommendations = null;
+    DataModel model = null;
+  	UserSimilarity similarity = null;
+  	List<RecommendedItem> recommendations = null;
 
-		try{
-		  model = new FileDataModel(new File("dataModel.csv"));
-		} catch(IOException e){
-
-    }
-
-		try {
-		  similarity = new PearsonCorrelationSimilarity(model);
-		} catch(TasteException e) {
+    try {
+      model = new FileDataModel(new File("dataModel.csv"));
+    } catch(IOException e) {
 
     }
 
-	  UserNeighborhood neighborhood = new ThresholdUserNeighborhood(0.1, similarity, model);
-
-	  UserBasedRecommender recommender = new GenericUserBasedRecommender(model, neighborhood, similarity);
-
-		try{
-		  recommendations = recommender.recommend(usersMap.get(userId), 3);
+    try {
+      similarity = new PearsonCorrelationSimilarity(model);
     } catch(TasteException e) {
 
     }
 
+    UserNeighborhood neighborhood = new ThresholdUserNeighborhood(0.1, similarity, model);
+    UserBasedRecommender recommender = new GenericUserBasedRecommender(model, neighborhood, similarity);
+
+    try {
+      recommendations = recommender.recommend(usersMap.get(userId), 3);
+    } catch(TasteException e) {
+
+    }
 
     for(RecommendedItem recommendation : recommendations) {
       String rec = getKeyFromProdMap((int) recommendation.getItemID());
-        recs.add(rec);
+      recs.add(rec);
     }
 
     return recs;
+
   }
 
   public String getKeyFromProdMap(int value) {
-    for(String key: productsMap.keySet()){
-		  if(productsMap.get(key)==value)
-			  return key;
-	  }
+    for(String key: productsMap.keySet()) {
+      if(productsMap.get(key) == value) {
+        return key;
+      }
+    }
     return null;
   }
 }
